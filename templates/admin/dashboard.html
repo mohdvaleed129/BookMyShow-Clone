@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - BookMyShow{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3 col-xl-2 d-none d-lg-block">
+            <div class="admin-sidebar p-3">
+                <h6 class="text-secondary mb-3" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Menu</h6>
+                <nav class="nav flex-column">
+                    <a class="nav-link active" href="{{ url_for('main.admin_dashboard') }}"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+                    <a class="nav-link" href="{{ url_for('main.admin_movies') }}"><i class="bi bi-film me-2"></i>Movies</a>
+                    <a class="nav-link" href="{{ url_for('main.admin_shows') }}"><i class="bi bi-calendar-event me-2"></i>Shows</a>
+                    <a class="nav-link" href="{{ url_for('main.admin_users') }}"><i class="bi bi-people me-2"></i>Users</a>
+                    <a class="nav-link" href="{{ url_for('main.admin_bookings') }}"><i class="bi bi-ticket-perforated me-2"></i>Bookings</a>
+                </nav>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="col-lg-9 col-xl-10">
+            <h3 class="text-white mb-4" style="font-weight: 700;">Dashboard</h3>
+            
+            <!-- Stats -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(229,9,20,0.15); color: var(--bms-primary);"><i class="bi bi-film"></i></div>
+                        <div class="stat-value">{{ stats.total_movies }}</div>
+                        <div class="stat-label">Total Movies</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(40,167,69,0.15); color: var(--bms-green);"><i class="bi bi-ticket-perforated"></i></div>
+                        <div class="stat-value">{{ stats.confirmed_bookings }}</div>
+                        <div class="stat-label">Confirmed Bookings</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(77,171,247,0.15); color: var(--bms-blue);"><i class="bi bi-currency-dollar"></i></div>
+                        <div class="stat-value">${{ "%.0f"|format(stats.revenue) }}</div>
+                        <div class="stat-label">Total Revenue</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Bookings -->
+            <div class="glass-card p-4">
+                <h5 class="text-white mb-3" style="font-weight: 600;">Recent Bookings</h5>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover" style="background: transparent;">
+                        <thead>
+                            <tr style="color: var(--bms-text-secondary);">
+                                <th>Booking ID</th>
+                                <th>User</th>
+                                <th>Movie</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for booking in recent_bookings %}
+                            <tr>
+                                <td class="booking-id" style="font-size: 0.9rem;">{{ booking.booking_id }}</td>
+                                <td>{{ booking.user.fullname }}</td>
+                                <td>{{ booking.movie.title }}</td>
+                                <td style="color: var(--bms-primary); font-weight: 600;">${{ "%.2f"|format(booking.total_amount) }}</td>
+                                <td><span class="badge {% if booking.status == 'confirmed' %}bg-success{% elif booking.status == 'cancelled' %}bg-danger{% else %}bg-secondary{% endif %}">{{ booking.status }}</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

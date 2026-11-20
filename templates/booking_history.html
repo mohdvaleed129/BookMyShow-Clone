@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}My Bookings - BookMyShow{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="section-header">
+        <h2 class="section-title text-white">My Bookings</h2>
+    </div>
+    
+    {% if bookings %}
+    <div class="row g-4">
+        {% for item in bookings %}
+        <div class="col-lg-6">
+            <div class="glass-card p-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <span class="booking-id" style="font-size: 1rem;">{{ item.booking.booking_id }}</span>
+                        <span class="badge ms-2 {% if item.booking.status == 'confirmed' %}bg-success{% elif item.booking.status == 'cancelled' %}bg-danger{% else %}bg-secondary{% endif %}" style="font-size: 0.75rem; text-transform: uppercase;">
+                            {{ item.booking.status }}
+                        </span>
+                    </div>
+                    <span class="text-secondary" style="font-size: 0.8rem;">{{ item.booking.booking_date.strftime('%b %d, %Y') }}</span>
+                </div>
+                
+                <h5 class="text-white mb-2">{{ item.movie.title }}</h5>
+                <p class="text-secondary mb-1" style="font-size: 0.9rem;">
+                    <i class="bi bi-geo-alt me-2" style="color: var(--bms-primary);"></i>{{ item.show.theatre }}
+                </p>
+                <p class="text-secondary mb-1" style="font-size: 0.9rem;">
+                    <i class="bi bi-calendar me-2" style="color: var(--bms-primary);"></i>{{ item.show.show_date.strftime('%b %d, %Y') }} | {{ item.show.show_time.strftime('%I:%M %p') }}
+                </p>
+                <p class="text-secondary mb-3" style="font-size: 0.9rem;">
+                    <i class="bi bi-ticket-perforated me-2" style="color: var(--bms-primary);"></i>{{ item.booking.seats }}
+                </p>
+                
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0" style="color: var(--bms-primary); font-weight: 700;">${{ "%.2f"|format(item.booking.total_amount) }}</h5>
+                    <div class="d-flex gap-2">
+                        <a href="{{ url_for('main.view_ticket', booking_id=item.booking.id) }}" class="btn btn-bms-outline btn-sm">
+                            <i class="bi bi-eye me-1"></i>View
+                        </a>
+                        {% if item.booking.status == 'confirmed' %}
+                        <form method="POST" action="{{ url_for('main.cancel_booking', booking_id=item.booking.id) }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                <i class="bi bi-x-circle me-1"></i>Cancel
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="bi bi-ticket-perforated" style="font-size: 4rem; color: var(--bms-text-muted);"></i>
+        <h4 class="text-white mt-3">No Bookings Yet</h4>
+        <p class="text-secondary">Start booking your favorite movies!</p>
+        <a href="{{ url_for('main.movies') }}" class="btn btn-bms mt-3">Browse Movies</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

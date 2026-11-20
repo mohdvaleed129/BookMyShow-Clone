@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Booking Confirmed - BookMyShow{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="ticket-card text-center">
+                <div class="mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 80px; height: 80px; background: rgba(40,167,69,0.2);">
+                        <i class="bi bi-check-circle-fill" style="font-size: 2.5rem; color: var(--bms-green);"></i>
+                    </div>
+                    <h2 class="text-white mb-2" style="font-weight: 700;">Booking Confirmed!</h2>
+                    <p class="text-secondary">Your tickets have been booked successfully</p>
+                </div>
+                
+                <div class="booking-id mb-4">{{ booking.booking_id }}</div>
+                
+                <div class="text-start glass-card p-3 mb-4">
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <p class="text-secondary mb-1" style="font-size: 0.8rem;">Movie</p>
+                            <p class="text-white mb-0" style="font-weight: 600;">{{ movie.title }}</p>
+                        </div>
+                        <div class="col-6">
+                            <p class="text-secondary mb-1" style="font-size: 0.8rem;">Theatre</p>
+                            <p class="text-white mb-0">{{ show.theatre }}</p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <p class="text-secondary mb-1" style="font-size: 0.8rem;">Date</p>
+                            <p class="text-white mb-0">{{ show.show_date.strftime('%b %d, %Y') }}</p>
+                        </div>
+                        <div class="col-6">
+                            <p class="text-secondary mb-1" style="font-size: 0.8rem;">Time</p>
+                            <p class="text-white mb-0">{{ show.show_time.strftime('%I:%M %p') }}</p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <p class="text-secondary mb-1" style="font-size: 0.8rem;">Seats</p>
+                            <p class="text-white mb-0" style="font-weight: 600;">{{ booking.seats }}</p>
+                        </div>
+                        <div class="col-6">
+                            <p class="text-secondary mb-1" style="font-size: 0.8rem;">Screen</p>
+                            <p class="text-white mb-0">{{ show.screen }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <p class="text-secondary mb-1" style="font-size: 0.8rem;">Total Amount</p>
+                            <h4 class="mb-0" style="color: var(--bms-primary); font-weight: 700;">${{ "%.2f"|format(booking.total_amount) }}</h4>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-flex gap-3 justify-content-center">
+                    <a href="{{ url_for('main.view_ticket', booking_id=booking.id) }}" class="btn btn-bms">
+                        <i class="bi bi-ticket-perforated me-2"></i>View Ticket
+                    </a>
+                    <a href="{{ url_for('main.booking_history') }}" class="btn btn-bms-outline">
+                        <i class="bi bi-list me-2"></i>My Bookings
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

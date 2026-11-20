@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-3 col-xl-2 d-none d-lg-block">
+            <div class="admin-sidebar p-3">
+                <h6 class="text-secondary mb-3" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Menu</h6>
+                <nav class="nav flex-column">
+                    <a class="nav-link" href="{{ url_for('main.admin_dashboard') }}"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+                    <a class="nav-link active" href="{{ url_for('main.admin_movies') }}"><i class="bi bi-film me-2"></i>Movies</a>
+                    <a class="nav-link" href="{{ url_for('main.admin_shows') }}"><i class="bi bi-calendar-event me-2"></i>Shows</a>
+                    <a class="nav-link" href="{{ url_for('main.admin_users') }}"><i class="bi bi-people me-2"></i>Users</a>
+                    <a class="nav-link" href="{{ url_for('main.admin_bookings') }}"><i class="bi bi-ticket-perforated me-2"></i>Bookings</a>
+                </nav>
+            </div>
+        </div>
+        <div class="col-lg-9 col-xl-10">
+            <h3 class="text-white mb-4" style="font-weight: 700;">{{ title }}</h3>
+            <div class="glass-card p-4">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.title.label(class="form-label") }}
+                            {{ form.title(class="form-control" + (" is-invalid" if form.title.errors else "")) }}
+                            {% for error in form.title.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.genre.label(class="form-label") }}
+                            {{ form.genre(class="form-control" + (" is-invalid" if form.genre.errors else "")) }}
+                            {% for error in form.genre.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            {{ form.language.label(class="form-label") }}
+                            {{ form.language(class="form-select" + (" is-invalid" if form.language.errors else "")) }}
+                            {% for error in form.language.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.duration.label(class="form-label") }}
+                            {{ form.duration(class="form-control" + (" is-invalid" if form.duration.errors else ""), placeholder="e.g., 2h 30m") }}
+                            {% for error in form.duration.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.rating.label(class="form-label") }}
+                            {{ form.rating(class="form-control" + (" is-invalid" if form.rating.errors else ""), placeholder="0-10") }}
+                            {% for error in form.rating.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        {{ form.description.label(class="form-label") }}
+                        {{ form.description(class="form-control" + (" is-invalid" if form.description.errors else ""), rows=4) }}
+                        {% for error in form.description.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.poster.label(class="form-label") }}
+                            {{ form.poster(class="form-control" + (" is-invalid" if form.poster.errors else ""), placeholder="Image URL") }}
+                            {% for error in form.poster.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.trailer.label(class="form-label") }}
+                            {{ form.trailer(class="form-control" + (" is-invalid" if form.trailer.errors else ""), placeholder="YouTube embed URL") }}
+                            {% for error in form.trailer.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.release_date.label(class="form-label") }}
+                            {{ form.release_date(class="form-control" + (" is-invalid" if form.release_date.errors else ""), type="date") }}
+                            {% for error in form.release_date.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.status.label(class="form-label") }}
+                            {{ form.status(class="form-select" + (" is-invalid" if form.status.errors else "")) }}
+                            {% for error in form.status.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3">
+                        {{ form.submit(class="btn btn-bms") }}
+                        <a href="{{ url_for('main.admin_movies') }}" class="btn btn-bms-outline">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

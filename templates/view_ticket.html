@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Ticket - {{ booking.booking_id }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="ticket-card">
+                <div class="text-center mb-4">
+                    <i class="bi bi-film" style="font-size: 2rem; color: var(--bms-primary);"></i>
+                    <h4 class="text-white mt-2" style="font-weight: 700;">BookMyShow</h4>
+                    <p class="text-secondary" style="font-size: 0.85rem;">E-Ticket</p>
+                </div>
+                
+                <div class="booking-id text-center mb-4">{{ booking.booking_id }}</div>
+                
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <p class="text-secondary mb-1" style="font-size: 0.8rem;">Movie</p>
+                        <p class="text-white mb-0" style="font-weight: 600;">{{ movie.title }}</p>
+                    </div>
+                    <div class="col-6">
+                        <p class="text-secondary mb-1" style="font-size: 0.8rem;">Language</p>
+                        <p class="text-white mb-0">{{ movie.language }}</p>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <p class="text-secondary mb-1" style="font-size: 0.8rem;">Theatre</p>
+                        <p class="text-white mb-0">{{ show.theatre }}</p>
+                    </div>
+                    <div class="col-6">
+                        <p class="text-secondary mb-1" style="font-size: 0.8rem;">Screen</p>
+                        <p class="text-white mb-0">{{ show.screen }}</p>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <p class="text-secondary mb-1" style="font-size: 0.8rem;">Date</p>
+                        <p class="text-white mb-0">{{ show.show_date.strftime('%A, %b %d, %Y') }}</p>
+                    </div>
+                    <div class="col-6">
+                        <p class="text-secondary mb-1" style="font-size: 0.8rem;">Time</p>
+                        <p class="text-white mb-0">{{ show.show_time.strftime('%I:%M %p') }}</p>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-6">
+                        <p class="text-secondary mb-1" style="font-size: 0.8rem;">Seats</p>
+                        <p class="text-white mb-0" style="font-weight: 600; font-size: 1.1rem;">{{ booking.seats }}</p>
+                    </div>
+                    <div class="col-6">
+                        <p class="text-secondary mb-1" style="font-size: 0.8rem;">Total</p>
+                        <p class="mb-0" style="color: var(--bms-primary); font-weight: 700; font-size: 1.2rem;">${{ "%.2f"|format(booking.total_amount) }}</p>
+                    </div>
+                </div>
+                
+                <div class="text-center" style="border-top: 2px dashed var(--bms-border); padding-top: 1.5rem;">
+                    <div style="width: 150px; height: 40px; background: repeating-linear-gradient(90deg, #fff 0px, #fff 2px, transparent 2px, transparent 4px); margin: 0 auto; opacity: 0.3;"></div>
+                    <p class="text-secondary mt-2" style="font-size: 0.75rem;">Show this at the entrance</p>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <button class="btn btn-bms-outline me-2" onclick="window.print()">
+                    <i class="bi bi-printer me-2"></i>Print
+                </button>
+                <a href="{{ url_for('main.booking_history') }}" class="btn btn-bms">
+                    <i class="bi bi-arrow-left me-2"></i>Back
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

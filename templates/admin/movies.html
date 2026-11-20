@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Movies - Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-3 col-xl-2 d-none d-lg-block">
+            <div class="admin-sidebar p-3">
+                <h6 class="text-secondary mb-3" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Menu</h6>
+                <nav class="nav flex-column">
+                    <a class="nav-link" href="{{ url_for('main.admin_dashboard') }}"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+                    <a class="nav-link active" href="{{ url_for('main.admin_movies') }}"><i class="bi bi-film me-2"></i>Movies</a>
+                    <a class="nav-link" href="{{ url_for('main.admin_shows') }}"><i class="bi bi-calendar-event me-2"></i>Shows</a>
+                    <a class="nav-link" href="{{ url_for('main.admin_users') }}"><i class="bi bi-people me-2"></i>Users</a>
+                    <a class="nav-link" href="{{ url_for('main.admin_bookings') }}"><i class="bi bi-ticket-perforated me-2"></i>Bookings</a>
+                </nav>
+            </div>
+        </div>
+        <div class="col-lg-9 col-xl-10">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="text-white" style="font-weight: 700;">Manage Movies</h3>
+                <a href="{{ url_for('main.add_movie') }}" class="btn btn-bms"><i class="bi bi-plus-lg me-2"></i>Add Movie</a>
+            </div>
+            <div class="glass-card p-4">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover" style="background: transparent;">
+                        <thead>
+                            <tr style="color: var(--bms-text-secondary);">
+                                <th>ID</th>
+                                <th>Poster</th>
+                                <th>Title</th>
+                                <th>Genre</th>
+                                <th>Language</th>
+                                <th>Rating</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for movie in movies %}
+                            <tr>
+                                <td>{{ movie.id }}</td>
+                                <td><img src="{{ movie.poster }}" alt="{{ movie.title }}" style="width: 50px; height: 75px; object-fit: cover; border-radius: 8px;" ></td>
+                                <td style="font-weight: 600;">{{ movie.title }}</td>
+                                <td>{{ movie.genre }}</td>
+                                <td>{{ movie.language }}</td>
+                                <td><span style="color: var(--bms-gold);"><i class="bi bi-star-fill me-1"></i>{{ movie.rating }}</span></td>
+                                <td><span class="badge {% if movie.status == 'now_showing' %}bg-success{% else %}bg-info{% endif %}">{{ movie.status.replace('_', ' ').title() }}</span></td>
+                                <td>
+                                    <a href="{{ url_for('main.edit_movie', movie_id=movie.id) }}" class="btn btn-sm btn-bms-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;"><i class="bi bi-pencil"></i></a>
+                                    <form method="POST" action="{{ url_for('main.delete_movie', movie_id=movie.id) }}" style="display: inline;" onsubmit="return confirm('Delete this movie?');">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;"><i class="bi bi-trash"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block title %}Select Seats - {{ movie.title }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="glass-card p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h4 class="text-white mb-1" style="font-weight: 700;">{{ movie.title }}</h4>
+                        <p class="text-secondary mb-0" style="font-size: 0.9rem;">
+                            <i class="bi bi-geo-alt me-1"></i>{{ show.theatre }} | 
+                            <i class="bi bi-calendar me-1"></i>{{ show.show_date.strftime('%b %d') }} | 
+                            <i class="bi bi-clock me-1"></i>{{ show.show_time.strftime('%I:%M %p') }}
+                        </p>
+                    </div>
+                    <div class="text-end">
+                        <span class="badge" style="background: rgba(229,9,20,0.2); color: var(--bms-primary);">{{ show.screen }}</span>
+                    </div>
+                </div>
+                
+                <!-- Screen -->
+                <div class="cinema-screen">Screen</div>
+                
+                <!-- Legend -->
+                <div class="seat-legend">
+                    <div class="seat-legend-item">
+                        <div class="seat-legend-box" style="border-color: var(--bms-green); background: rgba(40,167,69,0.2);"></div>
+                        <span>Available</span>
+                    </div>
+                    <div class="seat-legend-item">
+                        <div class="seat-legend-box" style="border-color: var(--bms-red); background: rgba(220,53,69,0.2);"></div>
+                        <span>Booked</span>
+                    </div>
+                    <div class="seat-legend-item">
+                        <div class="seat-legend-box" style="border-color: var(--bms-blue); background: var(--bms-blue);"></div>
+                        <span>Selected</span>
+                    </div>
+                </div>
+                
+                <!-- VIP Seats -->
+                {% if vip_rows %}
+                <div class="mb-4">
+                    <div class="text-center mb-2">
+                        <span class="badge px-3 py-2" style="background: linear-gradient(135deg, #d4a017, #b8860b); color: white; font-size: 0.85rem;">
+                            <i class="bi bi-star-fill me-1"></i>VIP - ${{ prices.get('VIP', 50) }}
+                        </span>
+                    </div>
+                    {% for row, seats in vip_rows.items() %}
+                    <div class="d-flex justify-content-center gap-2 mb-2">
+                        {% for seat in seats %}
+                        <div class="seat {{ seat.status }}" data-seat-id="{{ seat.id }}" data-price="{{ seat.price }}" data-number="{{ seat.seat_number }}" onclick="toggleSeat(this)">
+                            {{ seat.seat_number }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <!-- Premium Seats -->
+                {% if premium_rows %}
+                <div class="mb-4">
+                    <div class="text-center mb-2">
+                        <span class="badge px-3 py-2" style="background: linear-gradient(135deg, #6c5ce7, #5b4cdb); color: white; font-size: 0.85rem;">
+                            <i class="bi bi-gem me-1"></i>Premium - ${{ prices.get('Premium', 35) }}
+                        </span>
+                    </div>
+                    {% for row, seats in premium_rows.items() %}
+                    <div class="d-flex justify-content-center gap-2 mb-2">
+                        {% for seat in seats %}
+                        <div class="seat {{ seat.status }}" data-seat-id="{{ seat.id }}" data-price="{{ seat.price }}" data-number="{{ seat.seat_number }}" onclick="toggleSeat(this)">
+                            {{ seat.seat_number }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <!-- Regular Seats -->
+                {% if regular_rows %}
+                <div class="mb-4">
+                    <div class="text-center mb-2">
+                        <span class="badge px-3 py-2" style="background: linear-gradient(135deg, #74b9ff, #0984e3); color: white; font-size: 0.85rem;">
+                            <i class="bi bi-circle me-1"></i>Regular - ${{ prices.get('Regular', 20) }}
+                        </span>
+                    </div>
+                    {% for row, seats in regular_rows.items() %}
+                    <div class="d-flex justify-content-center gap-2 mb-2">
+                        {% for seat in seats %}
+                        <div class="seat {{ seat.status }}" data-seat-id="{{ seat.id }}" data-price="{{ seat.price }}" data-number="{{ seat.seat_number }}" onclick="toggleSeat(this)">
+                            {{ seat.seat_number }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Booking Summary -->
+        <div class="col-lg-4">
+            <div class="glass-card p-4 sticky-top" style="top: 90px;">
+                <h5 class="text-white mb-3" style="font-weight: 700;">Booking Summary</h5>
+                <div class="mb-3">
+                    <p class="text-secondary mb-1" style="font-size: 0.85rem;">Movie</p>
+                    <p class="text-white mb-0" style="font-weight: 600;">{{ movie.title }}</p>
+                </div>
+                <div class="mb-3">
+                    <p class="text-secondary mb-1" style="font-size: 0.85rem;">Theatre</p>
+                    <p class="text-white mb-0">{{ show.theatre }}</p>
+                </div>
+                <div class="mb-3">
+                    <p class="text-secondary mb-1" style="font-size: 0.85rem;">Date & Time</p>
+                    <p class="text-white mb-0">{{ show.show_date.strftime('%b %d, %Y') }} | {{ show.show_time.strftime('%I:%M %p') }}</p>
+                </div>
+                <hr style="border-color: var(--bms-border);">
+                <div class="mb-3">
+                    <p class="text-secondary mb-1" style="font-size: 0.85rem;">Selected Seats</p>
+                    <div id="selectedSeats" class="d-flex flex-wrap gap-1">
+                        <span class="text-muted" style="font-size: 0.85rem;">No seats selected</span>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <p class="text-secondary mb-1" style="font-size: 0.85rem;">Total Amount</p>
+                    <h4 class="text-white mb-0" style="font-weight: 700; color: var(--bms-primary) !important;">$<span id="totalAmount">0</span></h4>
+                </div>
+                <button class="btn btn-bms w-100 btn-lg" id="confirmBtn" onclick="confirmBooking()" disabled>
+                    <i class="bi bi-check-circle me-2"></i>Confirm Booking
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let selectedSeats = [];
+let totalAmount = 0;
+
+function toggleSeat(element) {
+    if (element.classList.contains('booked')) return;
+    
+    const seatId = parseInt(element.dataset.seatId);
+    const price = parseFloat(element.dataset.price);
+    const seatNumber = element.dataset.number;
+    
+    if (element.classList.contains('selected')) {
+        element.classList.remove('selected');
+        element.classList.add('available');
+        selectedSeats = selectedSeats.filter(s => s.id !== seatId);
+        totalAmount -= price;
+    } else {
+        element.classList.remove('available');
+        element.classList.add('selected');
+        selectedSeats.push({ id: seatId, number: seatNumber, price: price });
+        totalAmount += price;
+    }
+    
+    updateSummary();
+}
+
+function updateSummary() {
+    const seatsContainer = document.getElementById('selectedSeats');
+    const totalElement = document.getElementById('totalAmount');
+    const confirmBtn = document.getElementById('confirmBtn');
+    
+    if (selectedSeats.length === 0) {
+        seatsContainer.innerHTML = '<span class="text-muted" style="font-size: 0.85rem;">No seats selected</span>';
+        confirmBtn.disabled = true;
+    } else {
+        seatsContainer.innerHTML = selectedSeats.map(s => 
+            `<span class="badge" style="background: var(--bms-blue); color: white;">${s.number}</span>`
+        ).join('');
+        confirmBtn.disabled = false;
+    }
+    
+    totalElement.textContent = totalAmount.toFixed(2);
+}
+
+function confirmBooking() {
+    if (selectedSeats.length === 0) return;
+    
+    const seatIds = selectedSeats.map(s => s.id);
+    const confirmBtn = document.getElementById('confirmBtn');
+    confirmBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Processing...';
+    confirmBtn.disabled = true;
+    
+    fetch('{{ url_for("main.book_seats") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+                },
+        body: JSON.stringify({
+            show_id: {{ show.id }},
+            seat_ids: seatIds
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = data.redirect;
+        } else {
+            alert(data.message || 'Booking failed. Please try again.');
+            confirmBtn.innerHTML = '<i class="bi bi-check-circle me-2"></i>Confirm Booking';
+            confirmBtn.disabled = false;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+        confirmBtn.innerHTML = '<i class="bi bi-check-circle me-2"></i>Confirm Booking';
+        confirmBtn.disabled = false;
+    });
+}
+</script>
+{% endblock %}

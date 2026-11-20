@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}{{ movie.title }} - BookMyShow{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Movie Poster -->
+        <div class="col-lg-4 mb-4">
+            <div class="movie-card">
+                <div class="card-img-wrapper" style="aspect-ratio: 2/3;">
+                    <img src="{{ movie.poster }}" class="card-img-top" alt="{{ movie.title }}" >
+                </div>
+            </div>
+        </div>
+
+        <!-- Movie Info -->
+        <div class="col-lg-8">
+            <div class="mb-4">
+                <span class="badge mb-2" style="background: rgba(229,9,20,0.2); color: var(--bms-primary); border: 1px solid rgba(229,9,20,0.3);">{{ movie.status.replace('_', ' ').title() }}</span>
+                <h1 class="text-white mb-2" style="font-weight: 700;">{{ movie.title }}</h1>
+                <div class="d-flex flex-wrap gap-3 mb-3">
+                    <span class="text-secondary"><i class="bi bi-star-fill me-1" style="color: var(--bms-gold);"></i>{{ movie.rating }}/10</span>
+                    <span class="text-secondary"><i class="bi bi-clock me-1"></i>{{ movie.duration }}</span>
+                    <span class="text-secondary"><i class="bi bi-globe me-1"></i>{{ movie.language }}</span>
+                    <span class="text-secondary"><i class="bi bi-calendar me-1"></i>{{ movie.release_date.strftime('%b %d, %Y') }}</span>
+                </div>
+                <p class="text-secondary mb-3">{{ movie.genre }}</p>
+            </div>
+
+            <div class="glass-card p-4 mb-4">
+                <h5 class="text-white mb-3" style="font-weight: 600;">Synopsis</h5>
+                <p class="text-secondary" style="line-height: 1.7;">{{ movie.description }}</p>
+            </div>
+
+            {% if movie.trailer %}
+            <div class="mb-4">
+                <h5 class="text-white mb-3" style="font-weight: 600;">Trailer</h5>
+                <div class="ratio ratio-16x9" style="border-radius: 12px; overflow: hidden;">
+                    <iframe src="{{ movie.trailer }}" title="Trailer" allowfullscreen></iframe>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Shows -->
+            {% if shows_by_date and movie.status == 'now_showing' %}
+            <div class="mt-4">
+                <h5 class="text-white mb-3" style="font-weight: 600;">Book Tickets</h5>
+                {% for date_str, shows_list in shows_by_date.items() %}
+                <div class="glass-card p-3 mb-3">
+                    <h6 class="text-white mb-2" style="font-size: 0.9rem;">
+                        <i class="bi bi-calendar-event me-2" style="color: var(--bms-primary);"></i>
+                        {{ shows_list[0].show_date.strftime('%A, %B %d, %Y') }}
+                    </h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for show in shows_list %}
+                        <a href="{{ url_for('main.seat_selection', show_id=show.id) }}" class="btn btn-bms-outline" style="padding: 0.4rem 1rem; font-size: 0.85rem;">
+                            <i class="bi bi-clock me-1"></i>{{ show.show_time.strftime('%I:%M %p') }}
+                            <span class="ms-1 text-secondary" style="font-size: 0.75rem;">| {{ show.theatre }}</span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% elif movie.status == 'coming_soon' %}
+            <div class="glass-card p-4 text-center">
+                <i class="bi bi-calendar-check" style="font-size: 3rem; color: var(--bms-primary);"></i>
+                <h5 class="text-white mt-3">Coming Soon</h5>
+                <p class="text-secondary">Booking will open closer to release date.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - BookMyShow{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="glass-card p-4 p-md-5 text-center">
+                <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 100px; height: 100px; background: linear-gradient(135deg, var(--bms-primary), var(--bms-primary-dark));">
+                    <i class="bi bi-person" style="font-size: 3rem; color: white;"></i>
+                </div>
+                <h3 class="text-white mb-1" style="font-weight: 700;">{{ user.fullname }}</h3>
+                <p class="text-secondary mb-4">{{ user.email }}</p>
+                
+                <div class="row g-3 mb-4">
+                    <div class="col-6">
+                        <div class="glass-card p-3">
+                            <h4 class="text-white mb-1" style="font-weight: 700;">{{ total_bookings }}</h4>
+                            <p class="text-secondary mb-0" style="font-size: 0.85rem;">Total Bookings</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="glass-card p-3">
+                            <h4 class="text-white mb-1" style="font-weight: 700;">{{ user.phone }}</h4>
+                            <p class="text-secondary mb-0" style="font-size: 0.85rem;">Phone</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-flex gap-3 justify-content-center">
+                    <a href="{{ url_for('main.edit_profile') }}" class="btn btn-bms">
+                        <i class="bi bi-pencil me-2"></i>Edit Profile
+                    </a>
+                    <a href="{{ url_for('main.change_password') }}" class="btn btn-bms-outline">
+                        <i class="bi bi-shield-lock me-2"></i>Change Password
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
