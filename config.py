@@ -6,5 +6,5 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Admin credentials (change in production)
-    ADMIN_USERNAME = 'admin'
-    ADMIN_PASSWORD = 'admin123'
+    ADMIN_USERNAME = ''
+    ADMIN_PASSWORD = ''
