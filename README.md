@@ -110,6 +110,9 @@ A movie ticket booking web application built using Python and Flask. Users can b
 │   └── errors/
 └── instance/
     └── database.db
+
+```
+
 ## **🚀 Getting Started**
 
 ### **1. Clone the Repository**
